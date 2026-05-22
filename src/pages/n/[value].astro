@@ -1,0 +1,259 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import LaurelDivider from "../../components/LaurelDivider.astro"
+import { toRoman } from "@tammergard/roman"
+import { MAX, MIN, detect, safeFromRoman, safeToRoman } from "../../lib/roman"
+
+const { value: rawValue } = Astro.params
+if (!rawValue) return Astro.redirect("/", 302)
+
+const decoded = decodeURIComponent(rawValue)
+const detected = detect(decoded)
+
+let arabic: number | null = null
+let roman: string | null = null
+
+if (detected.kind === "arabic") {
+	arabic = detected.value
+	roman = safeToRoman(detected.value)
+} else if (detected.kind === "roman") {
+	arabic = safeFromRoman(detected.value)
+	roman = arabic === null ? null : toRoman(arabic)
+}
+
+if (arabic === null || roman === null) {
+	return new Response(null, { status: 404 })
+}
+
+const safe: number = arabic
+const safeRoman: string = roman
+
+const neighbors = [-2, -1, 1, 2]
+	.map((offset) => safe + offset)
+	.filter((n) => n >= MIN && n <= MAX)
+	.map((n) => ({ arabic: n, roman: toRoman(n) }))
+
+const halves: Array<{ label: string; arabic: number; roman: string }> = []
+if (safe * 2 <= MAX) {
+	halves.push({
+		label: "Double",
+		arabic: safe * 2,
+		roman: toRoman(safe * 2),
+	})
+}
+if (safe > 1 && safe % 2 === 0) {
+	halves.push({
+		label: "Half",
+		arabic: safe / 2,
+		roman: toRoman(safe / 2),
+	})
+}
+if (safe * 10 <= MAX) {
+	halves.push({
+		label: "Ten times",
+		arabic: safe * 10,
+		roman: toRoman(safe * 10),
+	})
+}
+
+const breakdown: Array<{ value: number; symbol: string }> = []
+{
+	const PIECES: Array<[number, string]> = [
+		[1000, "M"],
+		[900, "CM"],
+		[500, "D"],
+		[400, "CD"],
+		[100, "C"],
+		[90, "XC"],
+		[50, "L"],
+		[40, "XL"],
+		[10, "X"],
+		[9, "IX"],
+		[5, "V"],
+		[4, "IV"],
+		[1, "I"],
+	]
+	let remaining = safe
+	for (const [v, s] of PIECES) {
+		while (remaining >= v) {
+			breakdown.push({ value: v, symbol: s })
+			remaining -= v
+		}
+	}
+}
+
+const title = `${safeRoman} = ${safe} · Roman Numerals`
+const description = `${safe} is written ${safeRoman} in roman numerals.`
+
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, s-maxage=604800, stale-while-revalidate=86400",
+)
+
+const prev = safe > MIN ? safe - 1 : null
+const next = safe < MAX ? safe + 1 : null
+
+function heroClasses(len: number): string {
+	if (len <= 6) return "text-7xl md:text-9xl tracking-[0.18em]"
+	if (len <= 9) return "text-6xl md:text-8xl tracking-[0.14em]"
+	if (len <= 12) return "text-4xl md:text-6xl tracking-[0.08em]"
+	return "text-3xl md:text-5xl tracking-[0.04em]"
+}
+
+function relatedClasses(len: number): string {
+	if (len <= 6) return "text-2xl tracking-[0.12em]"
+	if (len <= 10) return "text-xl tracking-[0.06em]"
+	return "text-base tracking-[0.04em]"
+}
+
+function neighbourClasses(len: number): string {
+	if (len <= 6) return "text-xl tracking-[0.12em]"
+	if (len <= 10) return "text-base tracking-[0.06em]"
+	return "text-sm tracking-[0.04em]"
+}
+---
+
+<Layout title={title} description={description}>
+	<main class="mx-auto max-w-3xl px-6 py-16">
+		<p class="text-center">
+			<a
+				href="/"
+				class="inscription text-shadow hover:text-imperial text-xs underline-offset-4 hover:underline"
+			>
+				← Roman · Numerals
+			</a>
+		</p>
+
+		<header class="mt-10 mb-16 text-center">
+			<p class="text-shadow inscription text-xs">· Numeral ·</p>
+			<div class="mt-8 flex justify-center">
+				<div class="tabula relative mx-8 px-12 py-10">
+					<p
+						class:list={[
+							"inscription carved-deep font-extrabold",
+							heroClasses(safeRoman.length),
+						]}
+					>
+						{safeRoman}
+					</p>
+					<div class="bg-rule/60 mx-auto my-4 h-px w-24"></div>
+					<p class="inscription text-shadow text-2xl md:text-3xl">
+						{safe}
+					</p>
+				</div>
+			</div>
+		</header>
+
+		<LaurelDivider label="Breakdown" class="mb-10" />
+
+		<section class="mb-16">
+			<ol
+				class="flex flex-wrap items-baseline justify-center gap-x-4 gap-y-3"
+			>
+				{
+					breakdown.map((piece, i) => (
+						<>
+							{i > 0 && (
+								<span class="text-bronze text-2xl font-light" aria-hidden="true">
+									+
+								</span>
+							)}
+							<li class="slab rounded-sm px-4 py-3 text-center">
+								<p class="inscription carved text-3xl font-bold tracking-[0.1em]">
+									{piece.symbol}
+								</p>
+								<p class="text-shadow mt-1 font-serif text-xs">
+									{piece.value}
+								</p>
+							</li>
+						</>
+					))
+				}
+			</ol>
+		</section>
+
+		{
+			halves.length > 0 && (
+				<>
+					<LaurelDivider label="Related" class="mb-10" />
+					<section class="mb-16">
+						<ul class="mx-auto flex max-w-2xl flex-wrap justify-center gap-4">
+							{halves.map((h) => (
+								<li class="slab w-48 rounded-sm p-5 text-center">
+									<p class="text-shadow inscription text-[0.65rem]">
+										· {h.label} ·
+									</p>
+									<a
+										href={`/n/${h.arabic}`}
+										class:list={[
+											"hover:text-imperial inscription carved mt-3 block font-bold",
+											relatedClasses(h.roman.length),
+										]}
+									>
+										{h.roman}
+									</a>
+									<p class="text-shadow mt-2 font-serif text-sm">
+										{h.arabic}
+									</p>
+								</li>
+							))}
+						</ul>
+					</section>
+				</>
+			)
+		}
+
+		<LaurelDivider label="Neighbours" class="mb-10" />
+		<section class="mb-16">
+			<ul class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+				{
+					neighbors.map((n) => (
+						<li class="slab rounded-sm p-4 text-center">
+							<a
+								href={`/n/${n.arabic}`}
+								class:list={[
+									"hover:text-imperial inscription block font-semibold",
+									neighbourClasses(n.roman.length),
+								]}
+							>
+								{n.roman}
+							</a>
+							<p class="text-shadow mt-1 font-serif text-xs">
+								{n.arabic}
+							</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<nav
+			class="border-rule mt-16 flex items-center justify-between border-t-2 border-double pt-6"
+		>
+			{
+				prev !== null ? (
+					<a
+						href={`/n/${prev}`}
+						class="inscription text-shadow hover:text-imperial text-xs"
+					>
+						← {toRoman(prev)}
+					</a>
+				) : (
+					<span />
+				)
+			}
+			{
+				next !== null ? (
+					<a
+						href={`/n/${next}`}
+						class="inscription text-shadow hover:text-imperial text-xs"
+					>
+						{toRoman(next)} →
+					</a>
+				) : (
+					<span />
+				)
+			}
+		</nav>
+	</main>
+</Layout>

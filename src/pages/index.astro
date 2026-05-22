@@ -1,12 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import LaurelWreath from "../components/LaurelWreath.astro"
+import LaurelDivider from "../components/LaurelDivider.astro"
 import { toRoman } from "@tammergard/roman"
 import {
 	detect,
+	englishDate,
 	latinDate,
 	safeFromRoman,
 	safeToRoman,
-	swedishDate,
 } from "../lib/roman"
 import { getStockholmToday } from "../lib/today"
 
@@ -15,7 +17,7 @@ const query = (params.get("q") ?? "").trim()
 
 const today = getStockholmToday()
 const todayLatin = latinDate(today.month, today.day, today.year)
-const todaySwedish = swedishDate(today.month, today.day, today.year)
+const todayEnglish = englishDate(today.month, today.day, today.year)
 const yearRoman = toRoman(today.year)
 
 type QueryResult =
@@ -32,7 +34,7 @@ if (query) {
 		if (roman === null) {
 			queryResult = {
 				ok: false,
-				reason: `${detected.value} kan inte skrivas som romerskt tal (giltigt intervall: 1–3999).`,
+				reason: `${detected.value} cannot be written as a roman numeral (valid range: 1–3999).`,
 				original: query,
 			}
 		} else {
@@ -48,7 +50,7 @@ if (query) {
 		if (arabic === null) {
 			queryResult = {
 				ok: false,
-				reason: `"${detected.value}" är inte ett välformat romerskt tal.`,
+				reason: `"${detected.value}" is not a well-formed roman numeral.`,
 				original: query,
 			}
 		} else {
@@ -63,11 +65,11 @@ if (query) {
 }
 
 const milestones = [
-	{ label: "Enheter", from: 1, to: 10 },
-	{ label: "Tiotal", from: 10, to: 100, step: 10 },
-	{ label: "Hundratal", from: 100, to: 1000, step: 100 },
-	{ label: "Tusental", from: 1000, to: 3000, step: 1000 },
-	{ label: "Det största", from: 3999, to: 3999 },
+	{ label: "Ones", from: 1, to: 10 },
+	{ label: "Tens", from: 10, to: 100, step: 10 },
+	{ label: "Hundreds", from: 100, to: 1000, step: 100 },
+	{ label: "Thousands", from: 1000, to: 3000, step: 1000 },
+	{ label: "The Largest", from: 3999, to: 3999 },
 ] as const
 
 const sections = milestones.map((section) => {
@@ -81,10 +83,17 @@ const sections = milestones.map((section) => {
 
 const title =
 	queryResult && queryResult.ok
-		? `${queryResult.arabic} = ${queryResult.roman} · Romerska siffror`
-		: "Romerska siffror"
+		? `${queryResult.arabic} = ${queryResult.roman} · Roman Numerals`
+		: "Roman Numerals"
 
-const description = `Konvertera mellan arabiska och romerska siffror. I dag är det ${todaySwedish} (${todayLatin}).`
+const description = `Convert between arabic and roman numerals. Today is ${todayEnglish} (${todayLatin}).`
+
+function resultClasses(len: number): string {
+	if (len <= 6) return "text-5xl md:text-7xl tracking-[0.18em]"
+	if (len <= 9) return "text-4xl md:text-6xl tracking-[0.12em]"
+	if (len <= 12) return "text-3xl md:text-5xl tracking-[0.08em]"
+	return "text-2xl md:text-4xl tracking-[0.04em]"
+}
 
 Astro.response.headers.set(
 	"Cache-Control",
@@ -94,102 +103,104 @@ Astro.response.headers.set(
 
 <Layout title={title} description={description}>
 	<main class="mx-auto max-w-4xl px-6 py-16">
-		<header class="mb-16 text-center">
-			<p
-				class="text-shadow inscription text-xs"
-				aria-label="Senatus Populusque Romanus"
-			>
-				S · P · Q · R
-			</p>
-			<div class="my-5 flex items-center justify-center gap-4">
-				<span
-					class="bg-inscription/70 h-px w-20"
-					aria-hidden="true"></span>
-				<span class="text-laurel text-2xl" aria-hidden="true">❦</span>
-				<span
-					class="bg-inscription/70 h-px w-20"
-					aria-hidden="true"></span>
+		<header class="mb-20 text-center">
+			<div class="flex justify-center">
+				<LaurelWreath center="SPQR" size={220} />
 			</div>
-			<h1 class="inscription carved text-6xl font-extrabold md:text-8xl">
-				Numeri
+			<h1
+				class="inscription carved-deep mt-4 text-5xl font-extrabold md:text-7xl"
+			>
+				Roman · Numerals
 			</h1>
 			<p
-				class="text-shadow inscription mt-3 text-xs tracking-[0.4em] md:text-sm"
+				class="text-shadow inscription mt-3 text-xs tracking-[0.35em] md:text-sm"
 			>
-				Romanorum
+				I — MMMCMXCIX
 			</p>
 		</header>
 
-		<section
-			class="border-rule mb-16 border-y-2 border-double py-8 text-center"
-		>
-			<p class="text-shadow inscription text-[0.65rem] md:text-xs">
-				Hodie · {todaySwedish}
-			</p>
-			<p class="inscription carved mt-4 text-3xl md:text-5xl">
-				{todayLatin}
-			</p>
-			<p class="text-shadow inscription mt-4 text-xs">
-				Anno Domini · {yearRoman}
-			</p>
+		<!-- Today inscription: tabula ansata -->
+		<section class="mb-20 flex justify-center">
+			<div class="tabula relative mx-8 px-10 py-7 text-center">
+				<p class="text-shadow inscription text-[0.6rem] md:text-xs">
+					Today
+				</p>
+				<p
+					class="inscription carved-deep mt-3 text-2xl md:text-4xl"
+				>
+					{todayLatin}
+				</p>
+				<div class="bg-rule/60 mx-auto my-3 h-px w-24"></div>
+				<p class="text-shadow inscription text-[0.6rem] md:text-xs">
+					Anno · {yearRoman} · {todayEnglish}
+				</p>
+			</div>
 		</section>
 
-		<section class="mb-20">
+		<!-- Converter -->
+		<section class="mb-24">
+			<LaurelDivider label="Convert" class="mb-10" />
 			<form method="get" action="/" class="mx-auto max-w-xl">
 				<label
 					for="q"
 					class="text-shadow inscription block text-center text-xs"
 				>
-					Slå upp ett tal
+					Roman or arabic
 				</label>
 				<div
-					class="border-inscription mt-4 flex gap-3 border-b-2 pb-2"
+					class="border-inscription bg-marble-deep/40 mt-4 flex gap-3 border-b-[3px] px-3 pb-2"
 				>
 					<input
 						id="q"
 						name="q"
 						type="search"
 						value={query}
-						placeholder="123 eller CXXIII"
+						placeholder="123 · CXXIII"
 						autocomplete="off"
 						spellcheck="false"
-						class="placeholder:text-shadow/70 inscription flex-1 bg-transparent text-2xl tracking-widest outline-none"
+						class="placeholder:text-shadow/60 inscription flex-1 bg-transparent text-2xl tracking-[0.2em] outline-none"
 					/>
 					<button
 						type="submit"
-						class="inscription text-shadow hover:text-inscription text-sm transition"
+						class="inscription text-shadow hover:text-imperial text-sm transition"
 					>
-						Konvertera
+						Convert
 					</button>
 				</div>
 			</form>
 
 			{
 				queryResult && (
-					<div class="mx-auto mt-10 max-w-xl text-center">
+					<div class="mx-auto mt-12 max-w-xl text-center">
 						{queryResult.ok ? (
-							<div class="space-y-2">
+							<div class="space-y-3">
 								<p class="text-shadow inscription text-[0.65rem]">
-									Resultat
+									· Result ·
 								</p>
-								<div class="flex flex-col items-center justify-center gap-3 md:flex-row md:gap-8">
+								<div class="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-10">
 									<a
-										href={`/tal/${queryResult.arabic}`}
-										class="hover:text-imperial inscription carved text-5xl font-bold tracking-widest md:text-7xl"
+										href={`/n/${queryResult.arabic}`}
+										class:list={[
+											"hover:text-imperial inscription carved-deep font-extrabold",
+											resultClasses(queryResult.roman.length),
+										]}
 									>
 										{queryResult.roman}
 									</a>
 									<span
-										class="text-shadow text-3xl"
+										class="text-bronze text-4xl font-light"
 										aria-hidden="true"
 									>
-										=
+										|
 									</span>
 									<a
-										href={`/tal/${queryResult.arabic}`}
-										class="hover:text-imperial inscription carved text-5xl font-bold md:text-7xl"
+										href={`/n/${queryResult.arabic}`}
+										class:list={[
+											"hover:text-imperial inscription carved-deep font-extrabold",
+											resultClasses(String(queryResult.arabic).length),
+										]}
 									>
-										{queryResult.arabic.toLocaleString("sv-SE")}
+										{queryResult.arabic}
 									</a>
 								</div>
 							</div>
@@ -203,27 +214,17 @@ Astro.response.headers.set(
 			}
 		</section>
 
-		<div class="my-16 flex items-center justify-center gap-4">
-			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
-			></span>
-			<span
-				class="text-shadow inscription text-[0.65rem] md:text-xs"
-			>
-				Tabula Numerorum
-			</span>
-			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
-			></span>
-		</div>
+		<LaurelDivider label="All numerals" class="mb-12" />
 
 		<nav
-			aria-label="Hoppa till sektion"
-			class="border-rule mb-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y py-3"
+			aria-label="Jump to section"
+			class="border-rule mb-14 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y-2 border-double py-4"
 		>
 			{
 				sections.map((section, i) => (
 					<a
-						href={`#sek-${i}`}
-						class="text-shadow hover:text-inscription inscription text-xs transition"
+						href={`#sec-${i}`}
+						class="text-shadow hover:text-imperial inscription text-xs transition"
 					>
 						{section.label}
 					</a>
@@ -233,24 +234,24 @@ Astro.response.headers.set(
 
 		{
 			sections.map((section, i) => (
-				<section id={`sek-${i}`} class="mb-14 scroll-mt-6">
-					<h2 class="inscription carved mb-5 text-2xl md:text-3xl">
-						{section.label}
+				<section id={`sec-${i}`} class="mb-16 scroll-mt-6">
+					<h2 class="inscription carved-deep mb-6 text-center text-2xl md:text-3xl">
+						· {section.label} ·
 					</h2>
-					<ul class="grid grid-cols-1 gap-x-10 gap-y-1 sm:grid-cols-2 md:grid-cols-3">
+					<ul class="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2 md:grid-cols-3">
 						{section.items.map((item) => (
-							<li class="border-rule flex items-baseline justify-between border-b border-dotted py-1.5">
+							<li class="border-rule/60 flex items-baseline justify-between border-b border-dotted py-2">
 								<a
-									href={`/tal/${item.arabic}`}
-									class="hover:text-imperial inscription text-lg font-semibold tracking-wider"
+									href={`/n/${item.arabic}`}
+									class="hover:text-imperial inscription text-lg font-semibold tracking-[0.15em]"
 								>
 									{item.roman}
 								</a>
 								<a
-									href={`/tal/${item.arabic}`}
-									class="text-shadow hover:text-inscription text-sm"
+									href={`/n/${item.arabic}`}
+									class="text-shadow hover:text-inscription font-serif text-sm"
 								>
-									{item.arabic.toLocaleString("sv-SE")}
+									{item.arabic}
 								</a>
 							</li>
 						))}
@@ -259,26 +260,20 @@ Astro.response.headers.set(
 			))
 		}
 
-		<div class="my-16 flex items-center justify-center gap-4">
-			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
-			></span>
-			<span class="text-laurel text-2xl" aria-hidden="true">❦</span>
-			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
-			></span>
-		</div>
+		<LaurelDivider class="my-20" />
 
 		<footer class="text-center">
 			<p class="text-shadow inscription text-xs">
 				<a
 					href="/api"
-					class="hover:text-inscription underline-offset-4 hover:underline"
+					class="hover:text-imperial underline-offset-4 hover:underline"
 				>
 					API
 				</a>
-				<span class="mx-3" aria-hidden="true">·</span>
+				<span class="text-bronze mx-3" aria-hidden="true">·</span>
 				<a
 					href="https://www.npmjs.com/package/@tammergard/roman"
-					class="hover:text-inscription underline-offset-4 hover:underline"
+					class="hover:text-imperial underline-offset-4 hover:underline"
 				>
 					@tammergard/roman
 				</a>

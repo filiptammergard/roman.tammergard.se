@@ -2,72 +2,177 @@
 
 :root {
 	color-scheme: light dark;
-	--c-marble: #ece2c9;
-	--c-marble-veined: #e3d8bc;
-	--c-inscription: #1f1812;
-	--c-shadow: #5d4a36;
-	--c-rule: #a8916a;
-	--c-imperial: #7a1c1c;
-	--c-laurel: #4f5a35;
+	--c-marble: #e8dcc0;
+	--c-marble-deep: #d4c399;
+	--c-inscription: #1a130c;
+	--c-shadow: #5a4528;
+	--c-rule: #9a8254;
+	--c-imperial: #6b1818;
+	--c-laurel: #4a5a2a;
+	--c-bronze: #8b6f3a;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--c-marble: #161210;
-		--c-marble-veined: #1f1a16;
-		--c-inscription: #ede0c2;
-		--c-shadow: #c0a982;
+		--c-marble: #14110d;
+		--c-marble-deep: #1c1813;
+		--c-inscription: #f0e3c4;
+		--c-shadow: #b89a6a;
 		--c-rule: #6b5638;
-		--c-imperial: #c45a4a;
-		--c-laurel: #8aa063;
+		--c-imperial: #c54a3a;
+		--c-laurel: #8da558;
+		--c-bronze: #c89a52;
 	}
 }
 
 @theme inline {
 	--color-marble: var(--c-marble);
-	--color-marble-veined: var(--c-marble-veined);
+	--color-marble-deep: var(--c-marble-deep);
 	--color-inscription: var(--c-inscription);
 	--color-shadow: var(--c-shadow);
 	--color-rule: var(--c-rule);
 	--color-imperial: var(--c-imperial);
 	--color-laurel: var(--c-laurel);
+	--color-bronze: var(--c-bronze);
 	--font-trajan:
 		"Cinzel", "Trajan Pro", "Trajan", "Times New Roman", Times, serif;
-	--font-serif: "EB Garamond", "Garamond", "Times New Roman", Times, serif;
+	--font-serif:
+		"EB Garamond", "Garamond", "Times New Roman", Times, serif;
 }
 
 body {
 	background-color: var(--c-marble);
 	background-image:
+		/* fine marble noise */
 		radial-gradient(
-			ellipse at top,
-			rgba(0, 0, 0, 0.04),
-			transparent 60%
+			circle at 25% 30%,
+			rgba(0, 0, 0, 0.025) 0,
+			transparent 12%
 		),
 		radial-gradient(
-			ellipse at bottom right,
-			rgba(0, 0, 0, 0.05),
-			transparent 55%
-		);
+			circle at 70% 15%,
+			rgba(0, 0, 0, 0.02) 0,
+			transparent 14%
+		),
+		radial-gradient(
+			circle at 80% 65%,
+			rgba(0, 0, 0, 0.03) 0,
+			transparent 16%
+		),
+		radial-gradient(
+			circle at 15% 80%,
+			rgba(0, 0, 0, 0.025) 0,
+			transparent 18%
+		),
+		/* veining */
+			linear-gradient(
+				115deg,
+				transparent 49.7%,
+				rgba(0, 0, 0, 0.05) 49.85%,
+				transparent 50%
+			),
+		linear-gradient(
+			68deg,
+			transparent 79.7%,
+			rgba(0, 0, 0, 0.04) 79.85%,
+			transparent 80%
+		),
+		/* edge vignette */
+			radial-gradient(
+				ellipse at center,
+				transparent 50%,
+				rgba(0, 0, 0, 0.08) 100%
+			);
 }
 
 .inscription {
 	font-family: var(--font-trajan);
-	letter-spacing: 0.08em;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	font-feature-settings: "lnum";
+}
+
+.inscription-tight {
+	font-family: var(--font-trajan);
+	letter-spacing: 0.06em;
 	text-transform: uppercase;
 }
 
 .carved {
 	color: var(--c-inscription);
 	text-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.35),
-		0 -1px 0 rgba(0, 0, 0, 0.45);
+		0 1px 0 rgba(255, 255, 255, 0.55),
+		0 -1px 0 rgba(0, 0, 0, 0.55),
+		1px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.carved-deep {
+	color: var(--c-inscription);
+	text-shadow:
+		0 2px 0 rgba(255, 255, 255, 0.6),
+		0 -2px 1px rgba(0, 0, 0, 0.55),
+		2px 0 1px rgba(0, 0, 0, 0.25),
+		-1px 0 1px rgba(255, 255, 255, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {
 	.carved {
 		text-shadow:
-			0 1px 0 rgba(0, 0, 0, 0.6),
-			0 -1px 0 rgba(255, 255, 255, 0.06);
+			0 1px 0 rgba(0, 0, 0, 0.7),
+			0 -1px 0 rgba(255, 255, 255, 0.08);
 	}
+	.carved-deep {
+		text-shadow:
+			0 2px 0 rgba(0, 0, 0, 0.8),
+			0 -2px 1px rgba(255, 255, 255, 0.1),
+			2px 0 1px rgba(0, 0, 0, 0.5);
+	}
+}
+
+/* Tabula ansata frame — the trapezoidal Roman tablet */
+.tabula {
+	position: relative;
+	border: 2px solid var(--c-inscription);
+	background-color: var(--c-marble-deep);
+	box-shadow:
+		inset 0 0 0 1px var(--c-marble),
+		inset 0 0 0 3px var(--c-inscription),
+		0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.tabula::before,
+.tabula::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	width: 28px;
+	height: 36px;
+	transform: translateY(-50%);
+	background-color: var(--c-marble-deep);
+	border: 2px solid var(--c-inscription);
+}
+
+.tabula::before {
+	left: -30px;
+	clip-path: polygon(100% 0, 100% 100%, 0 70%, 0 30%);
+}
+
+.tabula::after {
+	right: -30px;
+	clip-path: polygon(0 0, 0 100%, 100% 70%, 100% 30%);
+}
+
+/* Stone slab card */
+.slab {
+	background-color: var(--c-marble-deep);
+	border: 1px solid var(--c-rule);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.2),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+		0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Section header with laurel flourish */
+.flourish {
+	color: var(--c-laurel);
 }

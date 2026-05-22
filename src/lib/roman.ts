@@ -18,19 +18,19 @@ export const LATIN_MONTHS = [
 	"December",
 ] as const
 
-export const SWEDISH_MONTHS = [
-	"januari",
-	"februari",
-	"mars",
-	"april",
-	"maj",
-	"juni",
-	"juli",
-	"augusti",
-	"september",
-	"oktober",
-	"november",
-	"december",
+export const ENGLISH_MONTHS = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
 ] as const
 
 export function safeToRoman(arabic: number): string | null {
@@ -83,11 +83,11 @@ export function latinDate(month: number, day: number, year: number): string {
 	return `${toRoman(day)} ${m} ${toRoman(year)}`
 }
 
-export function swedishDate(
+export function englishDate(
 	month: number,
 	day: number,
 	year: number,
 ): string {
-	const m = SWEDISH_MONTHS[month - 1] ?? ""
-	return `${day} ${m} ${year}`
+	const m = ENGLISH_MONTHS[month - 1] ?? ""
+	return `${m} ${day}, ${year}`
 }

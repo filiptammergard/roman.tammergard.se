@@ -1,0 +1,94 @@
+---
+interface Props {
+	center?: string
+	size?: number
+	class?: string
+}
+const { center = "SPQR", size = 200, class: cls = "" } = Astro.props
+---
+
+<svg
+	viewBox="0 0 240 240"
+	width={size}
+	height={size}
+	class={cls}
+	aria-hidden="true"
+	fill="none"
+>
+	<g stroke="var(--c-laurel)" fill="var(--c-laurel)" stroke-linecap="round">
+		<!-- Left branch stem -->
+		<path
+			d="M 120 220 C 28 188, 22 60, 120 22"
+			fill="none"
+			stroke-width="2.5"></path>
+		<!-- Left leaves (filled ellipses tangent to stem) -->
+		<g>
+			<ellipse cx="62" cy="195" rx="13" ry="5" transform="rotate(-32 62 195)"
+			></ellipse>
+			<ellipse cx="42" cy="170" rx="14" ry="5" transform="rotate(-55 42 170)"
+			></ellipse>
+			<ellipse cx="30" cy="140" rx="14" ry="5" transform="rotate(-78 30 140)"
+			></ellipse>
+			<ellipse cx="29" cy="108" rx="14" ry="5" transform="rotate(-100 29 108)"
+			></ellipse>
+			<ellipse cx="40" cy="78" rx="14" ry="5" transform="rotate(-122 40 78)"
+			></ellipse>
+			<ellipse cx="62" cy="52" rx="13" ry="5" transform="rotate(-145 62 52)"
+			></ellipse>
+			<ellipse cx="90" cy="35" rx="12" ry="4.5" transform="rotate(-165 90 35)"
+			></ellipse>
+		</g>
+		<!-- Right branch stem -->
+		<path
+			d="M 120 220 C 212 188, 218 60, 120 22"
+			fill="none"
+			stroke-width="2.5"></path>
+		<!-- Right leaves (mirrored) -->
+		<g>
+			<ellipse cx="178" cy="195" rx="13" ry="5" transform="rotate(32 178 195)"
+			></ellipse>
+			<ellipse cx="198" cy="170" rx="14" ry="5" transform="rotate(55 198 170)"
+			></ellipse>
+			<ellipse cx="210" cy="140" rx="14" ry="5" transform="rotate(78 210 140)"
+			></ellipse>
+			<ellipse cx="211" cy="108" rx="14" ry="5" transform="rotate(100 211 108)"
+			></ellipse>
+			<ellipse cx="200" cy="78" rx="14" ry="5" transform="rotate(122 200 78)"
+			></ellipse>
+			<ellipse cx="178" cy="52" rx="13" ry="5" transform="rotate(145 178 52)"
+			></ellipse>
+			<ellipse cx="150" cy="35" rx="12" ry="4.5" transform="rotate(165 150 35)"
+			></ellipse>
+		</g>
+		<!-- Small berry clusters near the join -->
+		<g fill="var(--c-bronze)" stroke="none">
+			<circle cx="118" cy="28" r="2"></circle>
+			<circle cx="124" cy="28" r="2"></circle>
+			<circle cx="121" cy="32" r="2"></circle>
+		</g>
+		<!-- Ribbon at bottom where branches meet -->
+		<g
+			stroke="var(--c-imperial)"
+			stroke-width="3"
+			stroke-linecap="butt"
+			fill="none"
+		>
+			<path d="M 100 215 L 140 215"></path>
+			<path d="M 100 215 L 90 228"></path>
+			<path d="M 140 215 L 150 228"></path>
+		</g>
+	</g>
+	<text
+		x="120"
+		y="138"
+		text-anchor="middle"
+		font-family="Cinzel, Georgia, serif"
+		font-size="38"
+		font-weight="800"
+		fill="var(--c-inscription)"
+		letter-spacing="3"
+		style="paint-order: stroke; stroke: var(--c-marble); stroke-width: 0.5"
+	>
+		{center}
+	</text>
+</svg>

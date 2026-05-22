@@ -1,30 +1,27 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import LaurelDivider from "../components/LaurelDivider.astro"
 ---
 
 <Layout
-	title="Sidan saknas · Romerska siffror"
-	description="Sidan kunde inte hittas."
+	title="Not Found · Roman Numerals"
+	description="The page could not be found."
 >
 	<main class="mx-auto max-w-2xl px-6 py-24 text-center">
 		<p class="text-shadow inscription text-xs">CDIV</p>
-		<div class="my-6 flex items-center justify-center gap-4">
-			<span class="bg-inscription/70 h-px w-16" aria-hidden="true"
-			></span>
-			<span class="text-laurel text-2xl" aria-hidden="true">❦</span>
-			<span class="bg-inscription/70 h-px w-16" aria-hidden="true"
-			></span>
-		</div>
-		<h1 class="inscription carved text-5xl">Non Inventum</h1>
-		<p class="text-shadow mt-6 italic">
-			Det här talet är inte ristat i sten.
+		<LaurelDivider class="my-8" />
+		<h1 class="inscription carved-deep text-5xl md:text-6xl">
+			Not · Found
+		</h1>
+		<p class="text-shadow mt-6 font-serif italic">
+			This numeral is not carved in stone.
 		</p>
 		<p class="mt-12">
 			<a
 				href="/"
-				class="inscription text-shadow hover:text-inscription text-xs underline underline-offset-4"
+				class="inscription text-shadow hover:text-imperial text-xs underline underline-offset-4"
 			>
-				Tillbaka
+				Back
 			</a>
 		</p>
 	</main>
