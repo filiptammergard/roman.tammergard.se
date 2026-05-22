@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+	color-scheme: light dark;
+	--c-marble: #ece2c9;
+	--c-marble-veined: #e3d8bc;
+	--c-inscription: #1f1812;
+	--c-shadow: #5d4a36;
+	--c-rule: #a8916a;
+	--c-imperial: #7a1c1c;
+	--c-laurel: #4f5a35;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--c-marble: #161210;
+		--c-marble-veined: #1f1a16;
+		--c-inscription: #ede0c2;
+		--c-shadow: #c0a982;
+		--c-rule: #6b5638;
+		--c-imperial: #c45a4a;
+		--c-laurel: #8aa063;
+	}
+}
+
+@theme inline {
+	--color-marble: var(--c-marble);
+	--color-marble-veined: var(--c-marble-veined);
+	--color-inscription: var(--c-inscription);
+	--color-shadow: var(--c-shadow);
+	--color-rule: var(--c-rule);
+	--color-imperial: var(--c-imperial);
+	--color-laurel: var(--c-laurel);
+	--font-trajan:
+		"Cinzel", "Trajan Pro", "Trajan", "Times New Roman", Times, serif;
+	--font-serif: "EB Garamond", "Garamond", "Times New Roman", Times, serif;
+}
+
+body {
+	background-color: var(--c-marble);
+	background-image:
+		radial-gradient(
+			ellipse at top,
+			rgba(0, 0, 0, 0.04),
+			transparent 60%
+		),
+		radial-gradient(
+			ellipse at bottom right,
+			rgba(0, 0, 0, 0.05),
+			transparent 55%
+		);
+}
+
+.inscription {
+	font-family: var(--font-trajan);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.carved {
+	color: var(--c-inscription);
+	text-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.35),
+		0 -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+	.carved {
+		text-shadow:
+			0 1px 0 rgba(0, 0, 0, 0.6),
+			0 -1px 0 rgba(255, 255, 255, 0.06);
+	}
+}

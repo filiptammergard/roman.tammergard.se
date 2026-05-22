@@ -1,0 +1,288 @@
+---
+import Layout from "../layouts/Layout.astro"
+import { toRoman } from "@tammergard/roman"
+import {
+	detect,
+	latinDate,
+	safeFromRoman,
+	safeToRoman,
+	swedishDate,
+} from "../lib/roman"
+import { getStockholmToday } from "../lib/today"
+
+const params = Astro.url.searchParams
+const query = (params.get("q") ?? "").trim()
+
+const today = getStockholmToday()
+const todayLatin = latinDate(today.month, today.day, today.year)
+const todaySwedish = swedishDate(today.month, today.day, today.year)
+const yearRoman = toRoman(today.year)
+
+type QueryResult =
+	| { ok: true; arabic: number; roman: string; original: string }
+	| { ok: false; reason: string; original: string }
+
+let queryResult: QueryResult | null = null
+if (query) {
+	const detected = detect(query)
+	if (detected.kind === "invalid") {
+		queryResult = { ok: false, reason: detected.reason, original: query }
+	} else if (detected.kind === "arabic") {
+		const roman = safeToRoman(detected.value)
+		if (roman === null) {
+			queryResult = {
+				ok: false,
+				reason: `${detected.value} kan inte skrivas som romerskt tal (giltigt intervall: 1–3999).`,
+				original: query,
+			}
+		} else {
+			queryResult = {
+				ok: true,
+				arabic: detected.value,
+				roman,
+				original: query,
+			}
+		}
+	} else {
+		const arabic = safeFromRoman(detected.value)
+		if (arabic === null) {
+			queryResult = {
+				ok: false,
+				reason: `"${detected.value}" är inte ett välformat romerskt tal.`,
+				original: query,
+			}
+		} else {
+			queryResult = {
+				ok: true,
+				arabic,
+				roman: detected.value,
+				original: query,
+			}
+		}
+	}
+}
+
+const milestones = [
+	{ label: "Enheter", from: 1, to: 10 },
+	{ label: "Tiotal", from: 10, to: 100, step: 10 },
+	{ label: "Hundratal", from: 100, to: 1000, step: 100 },
+	{ label: "Tusental", from: 1000, to: 3000, step: 1000 },
+	{ label: "Det största", from: 3999, to: 3999 },
+] as const
+
+const sections = milestones.map((section) => {
+	const step = "step" in section ? section.step : 1
+	const items: Array<{ arabic: number; roman: string }> = []
+	for (let n = section.from; n <= section.to; n += step) {
+		items.push({ arabic: n, roman: toRoman(n) })
+	}
+	return { label: section.label, items }
+})
+
+const title =
+	queryResult && queryResult.ok
+		? `${queryResult.arabic} = ${queryResult.roman} · Romerska siffror`
+		: "Romerska siffror"
+
+const description = `Konvertera mellan arabiska och romerska siffror. I dag är det ${todaySwedish} (${todayLatin}).`
+
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, s-maxage=3600, stale-while-revalidate=86400",
+)
+---
+
+<Layout title={title} description={description}>
+	<main class="mx-auto max-w-4xl px-6 py-16">
+		<header class="mb-16 text-center">
+			<p
+				class="text-shadow inscription text-xs"
+				aria-label="Senatus Populusque Romanus"
+			>
+				S · P · Q · R
+			</p>
+			<div class="my-5 flex items-center justify-center gap-4">
+				<span
+					class="bg-inscription/70 h-px w-20"
+					aria-hidden="true"></span>
+				<span class="text-laurel text-2xl" aria-hidden="true">❦</span>
+				<span
+					class="bg-inscription/70 h-px w-20"
+					aria-hidden="true"></span>
+			</div>
+			<h1 class="inscription carved text-6xl font-extrabold md:text-8xl">
+				Numeri
+			</h1>
+			<p
+				class="text-shadow inscription mt-3 text-xs tracking-[0.4em] md:text-sm"
+			>
+				Romanorum
+			</p>
+		</header>
+
+		<section
+			class="border-rule mb-16 border-y-2 border-double py-8 text-center"
+		>
+			<p class="text-shadow inscription text-[0.65rem] md:text-xs">
+				Hodie · {todaySwedish}
+			</p>
+			<p class="inscription carved mt-4 text-3xl md:text-5xl">
+				{todayLatin}
+			</p>
+			<p class="text-shadow inscription mt-4 text-xs">
+				Anno Domini · {yearRoman}
+			</p>
+		</section>
+
+		<section class="mb-20">
+			<form method="get" action="/" class="mx-auto max-w-xl">
+				<label
+					for="q"
+					class="text-shadow inscription block text-center text-xs"
+				>
+					Slå upp ett tal
+				</label>
+				<div
+					class="border-inscription mt-4 flex gap-3 border-b-2 pb-2"
+				>
+					<input
+						id="q"
+						name="q"
+						type="search"
+						value={query}
+						placeholder="123 eller CXXIII"
+						autocomplete="off"
+						spellcheck="false"
+						class="placeholder:text-shadow/70 inscription flex-1 bg-transparent text-2xl tracking-widest outline-none"
+					/>
+					<button
+						type="submit"
+						class="inscription text-shadow hover:text-inscription text-sm transition"
+					>
+						Konvertera
+					</button>
+				</div>
+			</form>
+
+			{
+				queryResult && (
+					<div class="mx-auto mt-10 max-w-xl text-center">
+						{queryResult.ok ? (
+							<div class="space-y-2">
+								<p class="text-shadow inscription text-[0.65rem]">
+									Resultat
+								</p>
+								<div class="flex flex-col items-center justify-center gap-3 md:flex-row md:gap-8">
+									<a
+										href={`/tal/${queryResult.arabic}`}
+										class="hover:text-imperial inscription carved text-5xl font-bold tracking-widest md:text-7xl"
+									>
+										{queryResult.roman}
+									</a>
+									<span
+										class="text-shadow text-3xl"
+										aria-hidden="true"
+									>
+										=
+									</span>
+									<a
+										href={`/tal/${queryResult.arabic}`}
+										class="hover:text-imperial inscription carved text-5xl font-bold md:text-7xl"
+									>
+										{queryResult.arabic.toLocaleString("sv-SE")}
+									</a>
+								</div>
+							</div>
+						) : (
+							<p class="text-imperial inscription text-base italic">
+								{queryResult.reason}
+							</p>
+						)}
+					</div>
+				)
+			}
+		</section>
+
+		<div class="my-16 flex items-center justify-center gap-4">
+			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
+			></span>
+			<span
+				class="text-shadow inscription text-[0.65rem] md:text-xs"
+			>
+				Tabula Numerorum
+			</span>
+			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
+			></span>
+		</div>
+
+		<nav
+			aria-label="Hoppa till sektion"
+			class="border-rule mb-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y py-3"
+		>
+			{
+				sections.map((section, i) => (
+					<a
+						href={`#sek-${i}`}
+						class="text-shadow hover:text-inscription inscription text-xs transition"
+					>
+						{section.label}
+					</a>
+				))
+			}
+		</nav>
+
+		{
+			sections.map((section, i) => (
+				<section id={`sek-${i}`} class="mb-14 scroll-mt-6">
+					<h2 class="inscription carved mb-5 text-2xl md:text-3xl">
+						{section.label}
+					</h2>
+					<ul class="grid grid-cols-1 gap-x-10 gap-y-1 sm:grid-cols-2 md:grid-cols-3">
+						{section.items.map((item) => (
+							<li class="border-rule flex items-baseline justify-between border-b border-dotted py-1.5">
+								<a
+									href={`/tal/${item.arabic}`}
+									class="hover:text-imperial inscription text-lg font-semibold tracking-wider"
+								>
+									{item.roman}
+								</a>
+								<a
+									href={`/tal/${item.arabic}`}
+									class="text-shadow hover:text-inscription text-sm"
+								>
+									{item.arabic.toLocaleString("sv-SE")}
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))
+		}
+
+		<div class="my-16 flex items-center justify-center gap-4">
+			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
+			></span>
+			<span class="text-laurel text-2xl" aria-hidden="true">❦</span>
+			<span class="bg-inscription/70 h-px w-24" aria-hidden="true"
+			></span>
+		</div>
+
+		<footer class="text-center">
+			<p class="text-shadow inscription text-xs">
+				<a
+					href="/api"
+					class="hover:text-inscription underline-offset-4 hover:underline"
+				>
+					API
+				</a>
+				<span class="mx-3" aria-hidden="true">·</span>
+				<a
+					href="https://www.npmjs.com/package/@tammergard/roman"
+					class="hover:text-inscription underline-offset-4 hover:underline"
+				>
+					@tammergard/roman
+				</a>
+			</p>
+		</footer>
+	</main>
+</Layout>
