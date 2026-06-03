@@ -15,8 +15,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(vite@7.3.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0))
       '@tammergard/roman':
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.1.1
+        version: 1.1.1
       astro:
         specifier: ^6.3.5
         version: 6.3.7(@vercel/functions@3.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0)
@@ -28,8 +28,11 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(prettier@3.8.3)(typescript@6.0.3)
       '@tammergard/prettier-config':
-        specifier: ^3.0.0
-        version: 3.0.1(prettier@3.8.3)
+        specifier: ^3.0.2
+        version: 3.0.2(prettier@3.8.3)
+      '@tammergard/tsconfig':
+        specifier: ^3.0.2
+        version: 3.0.2(typescript@6.0.3)
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
@@ -747,15 +750,18 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tammergard/prettier-config@3.0.1':
-    resolution: {integrity: sha512-NmVgPQJgZE3Zf4GQ/fPKAi3jCEET10MMKfKBasRfnT/V4bxlu2kHzh8oFwP/7M/0d1udWfKFyRWs3kq9jUZcfw==}
-    engines: {node: '>=24'}
+  '@tammergard/prettier-config@3.0.2':
+    resolution: {integrity: sha512-TAAYGSfsf0YLKDhb4VuczP2VQJ0BbNCE1Swbgrci8rso/sucLFsguiwC+O+37V1Y7LZuKZRlIxL3Cg8DaeJc/A==}
     peerDependencies:
       prettier: '>=3.0.0'
 
-  '@tammergard/roman@1.1.0':
-    resolution: {integrity: sha512-8NgJXg+gvCdJMXHSDDaSqXAn+o4/lGmUlAF5QZHZ8vtsvQ5kk1NsWfVvZ2+2Tsw+hvVjDABJrO14pw6qglgyMw==}
-    engines: {node: '>=24'}
+  '@tammergard/roman@1.1.1':
+    resolution: {integrity: sha512-RoHjutmhSUWvFABvMnV3EB+mzX4zTdey0A5RtOiGcz07unLik1kIJTv1pWUZDmFXw9c9SjyEh1JTwnciL+y2cg==}
+
+  '@tammergard/tsconfig@3.0.2':
+    resolution: {integrity: sha512-bsuEvQdDqikQXFDI8sss2jtJcVOU4UIkTSGSWMFEI2nhutsOW78Mw5fXciblM0G4zzSpCzF8Y5BAsaO6njwLpA==}
+    peerDependencies:
+      typescript: '>=6'
 
   '@types/debug@4.1.13':
     resolution: {integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==}
@@ -2728,11 +2734,15 @@ snapshots:
       tailwindcss: 4.3.0
       vite: 7.3.3(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.9.0)
 
-  '@tammergard/prettier-config@3.0.1(prettier@3.8.3)':
+  '@tammergard/prettier-config@3.0.2(prettier@3.8.3)':
     dependencies:
       prettier: 3.8.3
 
-  '@tammergard/roman@1.1.0': {}
+  '@tammergard/roman@1.1.1': {}
+
+  '@tammergard/tsconfig@3.0.2(typescript@6.0.3)':
+    dependencies:
+      typescript: 6.0.3
 
   '@types/debug@4.1.13':
     dependencies:

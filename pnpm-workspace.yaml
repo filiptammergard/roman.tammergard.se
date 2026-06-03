@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+minimumReleaseAgeExclude:
+  - "@tammergard/tsconfig@3.0.2"
+  - "@tammergard/prettier-config@3.0.2"
+  - "@tammergard/roman@1.1.1"

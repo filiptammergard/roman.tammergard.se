@@ -36,36 +36,19 @@
 	--color-bronze: var(--c-bronze);
 	--font-trajan:
 		"Cinzel", "Trajan Pro", "Trajan", "Times New Roman", Times, serif;
-	--font-serif:
-		"EB Garamond", "Garamond", "Times New Roman", Times, serif;
+	--font-serif: "EB Garamond", "Garamond", "Times New Roman", Times, serif;
 }
 
 body {
 	background-color: var(--c-marble);
 	background-image:
 		/* fine marble noise */
-		radial-gradient(
-			circle at 25% 30%,
-			rgba(0, 0, 0, 0.025) 0,
-			transparent 12%
-		),
-		radial-gradient(
-			circle at 70% 15%,
-			rgba(0, 0, 0, 0.02) 0,
-			transparent 14%
-		),
-		radial-gradient(
-			circle at 80% 65%,
-			rgba(0, 0, 0, 0.03) 0,
-			transparent 16%
-		),
-		radial-gradient(
-			circle at 15% 80%,
-			rgba(0, 0, 0, 0.025) 0,
-			transparent 18%
-		),
+		radial-gradient(circle at 25% 30%, rgba(0, 0, 0, 0.025) 0, transparent 12%),
+		radial-gradient(circle at 70% 15%, rgba(0, 0, 0, 0.02) 0, transparent 14%),
+		radial-gradient(circle at 80% 65%, rgba(0, 0, 0, 0.03) 0, transparent 16%),
+		radial-gradient(circle at 15% 80%, rgba(0, 0, 0, 0.025) 0, transparent 18%),
 		/* veining */
-			linear-gradient(
+		linear-gradient(
 				115deg,
 				transparent 49.7%,
 				rgba(0, 0, 0, 0.05) 49.85%,
@@ -78,7 +61,7 @@ body {
 			transparent 80%
 		),
 		/* edge vignette */
-			radial-gradient(
+		radial-gradient(
 				ellipse at center,
 				transparent 50%,
 				rgba(0, 0, 0, 0.08) 100%

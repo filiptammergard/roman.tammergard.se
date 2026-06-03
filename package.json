@@ -1,26 +1,29 @@
 {
 	"name": "roman.tammergard.se",
+	"private": true,
 	"type": "module",
-	"version": "0.0.1",
 	"scripts": {
-		"dev": "astro dev",
+		"astro": "astro",
 		"build": "astro check && astro build",
+		"dev": "astro dev",
 		"format": "prettier --write .",
 		"format-check": "prettier --check .",
 		"preview": "astro preview",
-		"astro": "astro"
+		"review": "pnpm install --frozen-lockfile && pnpm format-check && pnpm build"
 	},
 	"dependencies": {
 		"@astrojs/vercel": "^10.0.7",
 		"@tailwindcss/vite": "^4.3.0",
-		"@tammergard/roman": "^1.1.0",
+		"@tammergard/roman": "^1.1.1",
 		"astro": "^6.3.5",
 		"tailwindcss": "^4.3.0"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
-		"@tammergard/prettier-config": "^3.0.0",
+		"@tammergard/prettier-config": "^3.0.2",
+		"@tammergard/tsconfig": "^3.0.2",
 		"prettier": "^3.8.3",
 		"typescript": "^6.0.3"
-	}
+	},
+	"packageManager": "pnpm@11.5.1"
 }

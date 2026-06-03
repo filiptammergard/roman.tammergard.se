@@ -83,11 +83,7 @@ export function latinDate(month: number, day: number, year: number): string {
 	return `${toRoman(day)} ${m} ${toRoman(year)}`
 }
 
-export function englishDate(
-	month: number,
-	day: number,
-	year: number,
-): string {
+export function englishDate(month: number, day: number, year: number): string {
 	const m = ENGLISH_MONTHS[month - 1] ?? ""
 	return `${m} ${day}, ${year}`
 }

@@ -103,8 +103,7 @@ export function parseRoman(value: string | undefined): ParseResult<string> {
 			message: `Invalid roman numeral "${value}". Must consist of the letters I, V, X, L, C, D, M.`,
 		}
 	}
-	const VALID =
-		/^(?=.)M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
+	const VALID = /^(?=.)M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
 	if (!VALID.test(upper)) {
 		return {
 			ok: false,

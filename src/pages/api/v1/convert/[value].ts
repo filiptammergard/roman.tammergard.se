@@ -24,8 +24,7 @@ export const GET: APIRoute = ({ params }) => {
 			roman: toRoman(detected.value),
 		})
 	}
-	const VALID =
-		/^(?=.)M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
+	const VALID = /^(?=.)M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
 	if (!VALID.test(detected.value)) {
 		return apiError(
 			422,
