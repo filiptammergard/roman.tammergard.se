@@ -16,7 +16,7 @@
 		"@tailwindcss/vite": "^4.3.0",
 		"@tammergard/roman": "^1.1.1",
 		"astro": "^6.3.5",
-		"tailwindcss": "^4.3.0"
+		"tailwindcss": "^4.3.1"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
