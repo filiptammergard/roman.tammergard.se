@@ -66,8 +66,7 @@ export function preflight() {
 }
 
 export type ParseResult<T> =
-	| { ok: true; value: T }
-	| { ok: false; status: 400 | 422; message: string }
+	{ ok: true; value: T } | { ok: false; status: 400 | 422; message: string }
 
 export function parseArabic(value: string | undefined): ParseResult<number> {
 	if (value == null || value === "") {
