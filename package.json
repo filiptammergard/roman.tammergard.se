@@ -15,7 +15,7 @@
 		"@astrojs/vercel": "^11.0.15",
 		"@tailwindcss/vite": "^4.3.3",
 		"@tammergard/roman": "^1.1.1",
-		"astro": "^7.3.8",
+		"astro": "^7.4.0",
 		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
