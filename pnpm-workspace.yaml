@@ -1,5 +1,9 @@
 overrides:
   "path-to-regexp@>=4.0.0 <6.3.0": "^6.3.0"
+  # @vercel/cli-config (via @vercel/functions > @vercel/oidc) pins zod to exactly
+  # 4.1.11, even in the latest 0.3.5. GHSA-mrhx-c7xc-m3w5, fixed in 4.6.6.
+  # Can be removed when @vercel/cli-config drops the exact pin.
+  "zod@>=4.0.0 <4.6.6": "^4.6.6"
 
 allowBuilds:
   esbuild: true
