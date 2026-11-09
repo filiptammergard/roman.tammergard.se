@@ -11,3 +11,12 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - "@tammergard/*"
+
+packageExtensions:
+  # @astrojs/astro2tsx pins @emnapi/core to 1.11.3 but doesn't declare
+  # @emnapi/runtime, so pnpm resolves @napi-rs/wasm-runtime's peer to the
+  # 2.0.0-beta pulled in by rolldown, which crashes `astro check`.
+  # Can be removed when astro2tsx declares @emnapi/runtime itself.
+  "@astrojs/astro2tsx":
+    dependencies:
+      "@emnapi/runtime": "1.11.3"
