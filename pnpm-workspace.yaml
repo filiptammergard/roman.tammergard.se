@@ -4,6 +4,14 @@ overrides:
   # 4.1.11, even in the latest 0.3.5. GHSA-mrhx-c7xc-m3w5, fixed in 4.6.6.
   # Can be removed when @vercel/cli-config drops the exact pin.
   "zod@>=4.0.0 <4.6.6": "^4.6.6"
+  # @vercel/nft (even the latest 1.11.1) declares glob ^13, and
+  # GHSA-3g3m-2fjr-6pw4 flags all of 13.x (13.0.7 backports the fix but is
+  # still in the advisory's range; first patched is 14.0.2). nft only
+  # calls `glob(pattern, { mark, ignore, dot, nodir })`, which 14 keeps,
+  # CommonJS build included; 14 also brings minimatch 11, which fixes
+  # GHSA-g3hv-75wg-m249. Verified with an identical .vercel/output file list.
+  # Can be removed when @vercel/nft moves to glob ^14.
+  "glob@>=9.0.0 <14.0.2": "^14.0.2"
 
 allowBuilds:
   esbuild: true
