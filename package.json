@@ -12,17 +12,17 @@
 		"review": "pnpm install --frozen-lockfile && pnpm format-check && pnpm build"
 	},
 	"dependencies": {
-		"@astrojs/vercel": "^11.0.19",
-		"@tailwindcss/vite": "^4.3.4",
+		"@astrojs/vercel": "^11.0.21",
+		"@tailwindcss/vite": "^4.3.5",
 		"@tammergard/roman": "^1.1.1",
-		"astro": "^7.4.7",
-		"tailwindcss": "^4.3.4"
+		"astro": "^7.4.11",
+		"tailwindcss": "^4.3.5"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.12",
 		"@tammergard/prettier-config": "^3.0.2",
 		"@tammergard/tsconfig": "^3.0.2",
-		"prettier": "^3.9.10",
+		"prettier": "^3.10.1",
 		"typescript": "^6.0.3"
 	},
 	"packageManager": "pnpm@12.14.0+sha512.c18ba6d87993d3d164cb5e8948f32b2c06ee854487e06cd8d86781342fb3e5bb4634367034711e86802baa9c37bea906ce1929ad08d70884c97d801df13389a6",
